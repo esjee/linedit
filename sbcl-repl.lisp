@@ -86,23 +86,4 @@ preserved with the :WRAP-CURRENT T."
 			(values)))))))
       t)))
 	  
-(defun eof-handler ()
-  (format *terminal-io* "Really quit SBCL? (y or n) ")
-  (finish-output *terminal-io*)
-  (handler-case
-      (loop
-       (let ((result (linedit)))
-         (cond
-           ((string= result "") nil)
-           ((char-equal (elt result 0) #\y)
-            (fresh-line)
-            (sb-ext:quit))
-           ((char-equal (elt result 0) #\n)
-            (return-from eof-handler "#.''end-of-file"))
-           (t nil))
-         (format *terminal-io* 
-		 "Please type \"y\" for yes or \"n\" for no.~%Really quit SBCL? (y or n) ")
-         (finish-output *terminal-io*)))
-    (end-of-file ()
-      (fresh-line)
-      (sb-ext:quit))))
+(defun eof-handler () (sb-ext:quit))
